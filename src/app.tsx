@@ -1,3 +1,5 @@
+import { useDocumentTitle } from '@mantine/hooks';
+import { version } from 'fabric';
 import { useEffect, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
@@ -5,6 +7,8 @@ import { FabricPreview } from './components/FabricPreview.tsx';
 import { JSONEditor } from './components/JSONEditor.tsx';
 
 export default function App() {
+    useDocumentTitle(`Fabric Preview ${version}`);
+
     const [data, setData] = useState<string>('');
 
     useEffect(() => {
