@@ -1,6 +1,6 @@
 import { notifications } from '@mantine/notifications';
 import { Canvas } from 'fabric';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Props } from '../types.ts';
 
@@ -10,6 +10,14 @@ export function FabricPreview({ data }: Props) {
 
     const canvasRef = useRef<Canvas | null>(null);
     const abortControllerRef = useRef<AbortController | null>(null);
+
+    const [size, setSize] = useState<{
+        width: number;
+        height: number;
+    }>({
+        width: 0,
+        height: 0,
+    });
 
     useEffect(() => {
         if (!domRef.current || !ref.current) {
@@ -28,10 +36,13 @@ export function FabricPreview({ data }: Props) {
                 return;
             }
 
-            canvasRef.current.setDimensions({
+            const size = {
                 width: domRef.current!.clientWidth,
                 height: domRef.current!.clientHeight,
-            });
+            };
+
+            canvasRef.current.setDimensions(size);
+            setSize(size);
         });
 
         resizeObserver.observe(domRef.current!);
@@ -95,6 +106,19 @@ export function FabricPreview({ data }: Props) {
             }}
         >
             <canvas ref={ref}></canvas>
+            <div
+                style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    zIndex: 10000,
+                    fontSize: '12px',
+                    lineHeight: '12px',
+                    padding: '4px 2px',
+                }}
+            >
+                {size.width} x {size.height}
+            </div>
         </div>
     );
 }
