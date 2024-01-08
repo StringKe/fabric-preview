@@ -1,10 +1,13 @@
 import { notifications } from '@mantine/notifications';
 import { Canvas } from 'fabric';
 import { useEffect, useRef, useState } from 'react';
-
+import * as fabric from 'fabric';
 import { Props } from '../types.ts';
 
-export function FabricPreview({ data }: Props) {
+// @ts-ignore
+window.fabric = fabric;
+
+export function FabricPreview({ data, setData }: Props) {
     const domRef = useRef<HTMLDivElement>(null);
     const ref = useRef<HTMLCanvasElement>(null);
 
@@ -24,9 +27,20 @@ export function FabricPreview({ data }: Props) {
             return;
         }
 
-        const canvas = (canvasRef.current = new Canvas(ref.current, {
-            preserveObjectStacking: true,
-        }));
+        const canvas =
+            // @ts-ignore
+            (window['artboard'] =
+            canvasRef.current =
+                new Canvas(ref.current, {
+                    preserveObjectStacking: true,
+                }));
+        // @ts-ignore
+        window.updateData = () => {
+            const jsonStr = JSON.stringify(canvas.toJSON(), null, 2);
+
+            setData(jsonStr);
+        };
+
         console.log(canvas);
     }, []);
 
