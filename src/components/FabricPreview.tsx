@@ -40,6 +40,10 @@ export function FabricPreview({ data, setData }: Props) {
 
             setData(jsonStr);
         };
+        // @ts-ignore
+        window.setData = (jsonStr: string) => {
+            setData(jsonStr);
+        }
 
         console.log(canvas);
     }, []);
